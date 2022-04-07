@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "sweater-345909",
+  "private_key_id": "8340662b46ffa5db91c59ff8eaba7692d429b485",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQD3/Rgrf81vYQMc\nC6dp3By/ozPkbqtm1WTqiPIpggaNknG683yd4s4dYf3PbtW5ZtFYITMftpleIwdv\ntS1sPX87BK4harc2ZVY70BDdeFuoe8KH2T3nePx59gtuEFRGmL5r3YrivJ0vSx0s\nKpJX6hb2LYxsakAEqcmRLg3PePsscgMdTGQSepbd6Px9q7s5x2g1X3SJTaBi1BVI\nPB5ACMhCPonYFGrCzbi2xSeq6O7OYMq0QpcFm2KGqM2sf3/L738lfHpDVbM1496X\nfbdxtVpW5iMKYwEqSniYCwh3+7wXbdjMYkRRc3OA0pyeK3DBE0WrPQDc71ka8Wt7\nhWNZkQjtAgMBAAECggEABQqJ1n6JWlGGSuhovZPqKLIkYKkoRlWhsMvaYmIgiHm4\n4qRG/P2qk3nVu0UFRrjSmiBIpgUj/oAnS0vLUdc5MiWw9YByG4K5W0tqQFpNQLJN\nXM4bfkxdE4yfJFxkHjBGNLKi+2N6rYaxH9/4rB1X3KbF40FQrleWP6OIR9atgnR/\noa2BIya8T/9y+xXDHN51OnS0RRI6SpU/8W+NdENXnVrYUIirGIcgH0jWMXx+S464\nR9E60O6wPULscihvJ6wliP98qgvC6pz+/XKfBjmC7TQzcGaCB3xve4j8HBMGEBCX\nVuC//sitE1UX7nhLG0h7BQaHI80g2CntZorl5iEtuQKBgQD9mO1omE/8BuYxgcTx\nGs9NQQSSbOSwDaF0lqkyc7t+OXWz8xISCe5hZMO9ah0sD0levvL85e6o4KsWBapp\ndOl5vBBxmYu8LHjytnA1fIFULpFSxfTlYuZ3GjlwdMsr1wBhxKD+pJ9YdnGBSN/k\nXaDryanWbVsDQ9nnwPMVCq4kdQKBgQD6VpBOUIp/aav9kAHYdZ40n7kj97VlMzns\ntCs52U/DPzhyF73dtFy9/z3/HK7JgpuDGx2dpcAyMB66eGbTWmBXuREESQ13kLZe\n8YI/dBFDRRUJzHBU8kvZJPPp9KgCnZf/d5KaQ+0pNd7GMiKnCRGK1O50yPoBhgu7\njlF25VRjmQKBgF9GiztWrgYz2VwUMxeaSPPvT3Zrrudt15Dj4aFw1aowkEYRNmLM\nlGDG6LtLGLaq75fHCad2A1ozPlPBwSppoCX6P/tOAq+pza7yV+ngYv5rmHGOqdlc\ndNWeZqIXXxWTazNQGmRRGQS1SyOVa3hyrLipRUOoRh9N6JonZawsHQzZAoGBAJYX\nYmvh9DfSJpFfTwv18QXCIeHDuZlUbk1R9Hy5ow4AEJqvS2HqqpQrvYMAMneU/CJO\nFqKXZzVwDmxkldnwXMUbq20zU4S1WfJwwFPFBjib6bI3Rb5Yi0tE0Y0a58Sxshk0\nGsytHztPFiMkmgwl7sObSODyQpq5QL2R5ZvwgXk5AoGAXF+0ivpGAT/wQGrGMDH6\nfHNpZp+ip77S58q6rPA+fQNLXzM7I0EGxcWTdxHrdZ/QQIaSMz18geZXx3sThgqj\nlW1JCeG+5VrZqL9flGxaJPkSuJMZrw43O2OWk2N5X8RVflmR6yp+inAl/AjuCjCY\natUe7Z15Xpysem76Pty+EWo=\n-----END PRIVATE KEY-----\n",
+  "client_email": "sweater-product-search@sweater-345909.iam.gserviceaccount.com",
+  "client_id": "106466386364999238263",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/sweater-product-search%40sweater-345909.iam.gserviceaccount.com"
+}
