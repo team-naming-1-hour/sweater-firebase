@@ -14,7 +14,7 @@ function recommandValidtor(coordi,condition) {
   const { stemp, isRain, isSnow, windSpeed} = condition;
   if (coordi['temperature'][LOWER] > stemp || stemp > coordi['temperature'][UPPER]) return false;
   if(isRain) {
-    if (coordi.items.some(item=>item.category==='jeans') && coordi.items.some(item=>item.category=='short-sleeve')) return false; // 비올때 흰티 청바지 조합 제외
+    if (coordi.items.some(item=>item.category==='jeans') && coordi.items.some(item=>item.category==='short-sleeve'&&item.color==='white')) return false; // 비올때 흰티 청바지 조합 제외
     if (coordi.items.some(item=>item.category==='skirt')) return false; // 비올때 스커트 제외
     if (coordi.items.some(item=>item.category==='shirt')) return false; // 비올때 셔츠 제외
     if (coordi.items.some(item=>item.category==='blouse')) return false; // 비올때 블라우스 제외
