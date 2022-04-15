@@ -14,18 +14,18 @@ function recommandValidtor(coordi,condition) {
   const { stemp, isRain, isSnow, windSpeed} = condition;
   if (coordi['temperature'][LOWER] > stemp || stemp > coordi['temperature'][UPPER]) return false;
   if(isRain) {
-    if (coordi.items.some(item=>item.category==='jeans') && coordi.items.some(item=>item.category==='short-sleeve'&&item.color==='white')) return false; // 비올때 흰티 청바지 조합 제외
-    if (coordi.items.some(item=>item.category==='skirt')) return false; // 비올때 스커트 제외
-    if (coordi.items.some(item=>item.category==='shirt')) return false; // 비올때 셔츠 제외
-    if (coordi.items.some(item=>item.category==='blouse')) return false; // 비올때 블라우스 제외
+    if (coordi.items.some(item=>item.minor==='jeans') && coordi.items.some(item=>item.minor==='sleeve'&&item.color==='white')) return false; // 비올때 흰티 청바지 조합 제외
+    if (coordi.items.some(item=>item.minor==='skirt')) return false; // 비올때 스커트 제외
+    if (coordi.items.some(item=>item.minor==='shirt')) return false; // 비올때 셔츠 제외
+    if (coordi.items.some(item=>item.minor==='blouse')) return false; // 비올때 블라우스 제외
     if (coordi.items.some(item=>item.color==='white')) return false; // 비올때 흰옷 제외  // hex로 바꾸면?
     if (coordi.items.some(item=>item.features.some(feature=>feature==='neat'))) return false; // 비올때 니트 제외
   }
   if(isSnow) {
-    if (coordi.items.some(item=>item.category==='far')) return false; // 눈올때 far 제외
+    if (coordi.items.some(item=>item.minor==='far')) return false; // 눈올때 far 제외
   }
   if(windSpeed>SKIRT_WARNING) {
-    if (coordi.items.some(item=>item.category==='mini-skirt')) return false; // 바람이 쌔면 미니스커트 제외
+    if (coordi.items.some(item=>item.minor==='mini-skirt')) return false; // 바람이 쌔면 미니스커트 제외
   }
   return true;
 }
