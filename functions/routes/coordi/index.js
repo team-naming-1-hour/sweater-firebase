@@ -9,17 +9,16 @@ const WOMAN = "2";
 const LOWER = 0;
 const UPPER = 1;
 const SKIRT_WARNING = 4;
+const MAX_NUM_OF_COORDI = 20;
 
 function recommandValidtor(coordi,condition) {
   const { stemp, isRain, isSnow, windSpeed} = condition;
   if (coordi['temperature'][LOWER] > stemp || stemp > coordi['temperature'][UPPER]) return false;
   if(isRain) {
-    if (coordi.items.some(item=>item.category==='jeans') && coordi.items.some(item=>item.category==='short-sleeve'&&item.color==='white')) return false; // 비올때 흰티 청바지 조합 제외
-    if (coordi.items.some(item=>item.category==='skirt')) return false; // 비올때 스커트 제외
-    if (coordi.items.some(item=>item.category==='shirt')) return false; // 비올때 셔츠 제외
-    if (coordi.items.some(item=>item.category==='blouse')) return false; // 비올때 블라우스 제외
-    if (coordi.items.some(item=>item.color==='white')) return false; // 비올때 흰옷 제외  // hex로 바꾸면?
-    if (coordi.items.some(item=>item.features.some(feature=>feature==='neat'))) return false; // 비올때 니트 제외
+    if (coordi.items.some(item=>item.minor==='skirt')) return false; // 비올때 스커트 제외
+    if (coordi.items.some(item=>item.minor==='shirt')) return false; // 비올때 셔츠 제외
+    if (coordi.items.some(item=>item.minor==='blouse')) return false; // 비올때 블라우스 제외
+    if (coordi.items.some(item=>item.minor==='neat')) return false; // 비올때 니트 제외
   }
   if(isSnow) {
     if (coordi.items.some(item=>item.category==='far')) return false; // 눈올때 far 제외
@@ -60,8 +59,18 @@ router.get("/recommand", async (req, res) => {
             recommandCoordiList.push(coordi);
           }
         });
-
-      res.json(recommandCoordiList.map(coordi=>{
+      let recommandCoordiListWithRandomIndex = recommandCoordiList.map(coordi=>{
+        return {
+          ...coordi,
+          random:Math.floor(Math.random() * (recommandCoordiList.length-1))
+        }
+      });
+      recommandCoordiListWithRandomIndex.sort((a,b)=>{
+        if(a.random < b.random) return 1;
+        else return -1;
+      })
+      let LimitedRecommandCoordiList = recommandCoordiListWithRandomIndex.slice(0,MAX_NUM_OF_COORDI);
+      res.json(LimitedRecommandCoordiList.map(coordi=>{
         return {
           url: coordi.url,
           items: coordi.items
