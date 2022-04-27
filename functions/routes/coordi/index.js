@@ -21,10 +21,10 @@ function recommandValidtor(coordi,condition) {
     if (coordi.items.some(item=>item.minor==='neat')) return false; // 비올때 니트 제외
   }
   if(isSnow) {
-    if (coordi.items.some(item=>item.category==='far')) return false; // 눈올때 far 제외
+    if (coordi.items.some(item=>item.minor==='far')) return false; // 눈올때 far 제외
   }
   if(windSpeed>SKIRT_WARNING) {
-    if (coordi.items.some(item=>item.category==='mini-skirt')) return false; // 바람이 쌔면 미니스커트 제외
+    if (coordi.items.some(item=>item.minor==='mini-skirt')) return false; // 바람이 쌔면 미니스커트 제외
   }
   return true;
 }
