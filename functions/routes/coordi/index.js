@@ -242,16 +242,16 @@ router.post("/list", async (req, res) => {
     }
     if(gender === WOMAN) {
       bottomList.push(...["mini_skirt","midi_skirt","long_skirt","hot_jeans","hot_cotton_pants","hot_training_pants"]);
-      clothMap['one_piece'] = onePieceList.filter(cloth=>clothValidator(cloth,condition,cloth2temp));
+      clothMap['one_piece'] = onePieceList.filter(cloth=>clothValidator(cloth,condition,cloth2temp)).map(cloth=>onePiece2kor[cloth]);
     }
-    clothMap['outer'] = outerList.filter(cloth=>clothValidator(cloth,condition,cloth2temp));
+    clothMap['outer'] = outerList.filter(cloth=>clothValidator(cloth,condition,cloth2temp)).map(cloth=>outer2kor[cloth]);
     if(clothMap['outer'].length===0) {
-      clothMap['top'] = topList.filter(cloth=>clothValidator(cloth,condition,cloth2temp));
+      clothMap['top'] = topList.filter(cloth=>clothValidator(cloth,condition,cloth2temp)).map(cloth=>top2kor[cloth]);
     }
     else {
-      clothMap['top'] = topList;
+      clothMap['top'] = topList.map(cloth=>top2kor[cloth]);
     }
-    clothMap['bottom'] = bottomList;
+    clothMap['bottom'] = bottomList.map(cloth=>bottom2kor[cloth]);
     
     res.json(clothMap);
   } catch(err) {
