@@ -28,55 +28,69 @@ function recommandValidtor(coordi,condition) {
   }
   return true;
 }
-
+/*
+작업 내용
+get->post로 수정
+가지고 있는 index list를 받음(alreadyHave)
+genderCoordiList에서 recommandValidtor를 통과하는 원소만 filter
+recommandCoordiList에서 MAX_NUM_OF_COORDI개의 index를 뽑음
+이때 alreadyHave를 set으로 만들고 이 set에 has되는 index는 무시하고 다시뽑도록 설정
+만들어진 index list로부터 코디를 뽑아 전달
+*/
 router.get("/recommand", async (req, res) => {
   const gender = parseInt(req.query.gender);
   const stemp = parseInt(req.query.stemp);
   const isRain = req.query.isRain === 'true';
   const isSnow = req.query.isSnow === 'true';
   const windSpeed  = parseInt(req.query.windSpeed);
+  //const alreadyHave = 
 
   try {
     const db = admin.firestore();
     const coordisCollection = db.collection('coordis');
     const genderCoordiList = await coordisCollection
     .where('gender',"==",parseInt(gender)).get();
-
     if(genderCoordiList.empty) {
       res.json([]);
-    } else {
-      const recommandCoordiList = [];
-      const condition = {
-        stemp : stemp,
-        isRain : isRain,
-        isSnow : isSnow,
-        windSpeed : windSpeed
-      }
-      genderCoordiList
-        .forEach(doc=> {
-          const coordi = doc.data();
-          if (recommandValidtor(coordi,condition)) {
-            recommandCoordiList.push(coordi);
-          }
-        });
-      let recommandCoordiListWithRandomIndex = recommandCoordiList.map(coordi=>{
-        return {
-          ...coordi,
-          random:Math.floor(Math.random() * (recommandCoordiList.length-1))
-        }
-      });
-      recommandCoordiListWithRandomIndex.sort((a,b)=>{
-        if(a.random < b.random) return 1;
-        else return -1;
-      })
-      let LimitedRecommandCoordiList = recommandCoordiListWithRandomIndex.slice(0,MAX_NUM_OF_COORDI);
-      res.json(LimitedRecommandCoordiList.map(coordi=>{
-        return {
-          url: coordi.url,
-          items: coordi.items
-        }
-      }));
+    } 
+
+    const condition = {
+      stemp : stemp,
+      isRain : isRain,
+      isSnow : isSnow,
+      windSpeed : windSpeed
     }
+
+    const recommandCoordiList = [];
+    genderCoordiList
+      .forEach(doc=>{
+        const coordi = doc.data();
+        if(recommandValidtor(coordi,condition)) {
+          recommandCoordiList.push(coordi);
+        }
+    });
+    const randomIndexSet = new Set();
+    let LimitedRecommandCoordiList = [];
+    if(recommandCoordiList.length <= MAX_NUM_OF_COORDI) { // 코디가 MAX_NUM_OF_COORDI보다 적으면 읽어온 리스트를 전부 반환
+      LimitedRecommandCoordiList = recommandCoordiList;
+    }
+    else {//이 방법은 코디의 수가 적을 땐 오히려 비효율적이다
+      while(randomIndexSet.size < MAX_NUM_OF_COORDI) {
+        let idx = Math.floor(Math.random() * (recommandCoordiList.length-1));
+        randomIndexSet.add(idx);
+      }
+      randomIndexSet.forEach(idx=>{
+        LimitedRecommandCoordiList.push(recommandCoordiList[idx]);
+      })
+    }
+    
+    res.json(LimitedRecommandCoordiList.map(coordi=>{
+      return {
+        url: coordi.url || '',
+        items: coordi.items || [],
+        style: coordi.style || ''
+      }
+    }));
   } catch (err) {
     res.status(400).send(err.message);
   }
