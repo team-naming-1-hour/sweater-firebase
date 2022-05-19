@@ -264,8 +264,13 @@ router.post("/recommand", async (req, res) => {
   const isRain = req.body.isRain === 'true';
   const isSnow = req.body.isSnow === 'true';
   const windSpeed  = parseInt(req.body.windSpeed);
-  //const alreadyHave = 
-
+  const filterList = JSON.parse(req.body.filterList || '{"outer":[],"top":[],"bottom":[],"one_piece":[]}');
+  const filterSet = {
+    'outer': new Set(filterList['outer']),
+    'top': new Set(filterList['top']),
+    'bottom': new Set(filterList['bottom']),
+    'one_piece': new Set(filterList['one_piece']),
+  }
   try {
     const db = admin.firestore();
     const coordisCollection = db.collection('coordis');
@@ -274,7 +279,6 @@ router.post("/recommand", async (req, res) => {
     if(genderCoordiList.empty) {
       res.json([]);
     } 
-
     const condition = {
       stemp : stemp,
       isRain : isRain,
@@ -290,18 +294,39 @@ router.post("/recommand", async (req, res) => {
           recommandCoordiList.push(coordi);
         }
     });
+    let filteredCoordiList = recommandCoordiList;
+    if(filterSet['outer'].size > 0) {
+      filteredCoordiList = filteredCoordiList.filter(coordi=>{
+        return coordi.items.some(cloth=>cloth.major==='outer' && filterSet['outer'].has(outer2kor[cloth.minor]))
+      })
+    }    
+    if(filterSet['top'].size > 0) {
+      filteredCoordiList = filteredCoordiList.filter(coordi=>{
+        return coordi.items.some(cloth=>cloth.major==='top' && filterSet['top'].has(top2kor[cloth.minor]))
+      })
+    }
+    if(filterSet['bottom'].size > 0) {
+      filteredCoordiList = filteredCoordiList.filter(coordi=>{
+        return coordi.items.some(cloth=>cloth.major==='bottom' && filterSet['bottom'].has(bottom2kor[cloth.minor]))
+      })
+    }
+    if(filterSet['one_piece'].size > 0) {
+      filteredCoordiList = filteredCoordiList.filter(coordi=>{
+        return coordi.items.some(cloth=>cloth.major==='one_piece' && filterSet['one_piece'].has(onePiece2kor[cloth.minor]))
+      })
+    }
     const randomIndexSet = new Set();
     let LimitedRecommandCoordiList = [];
-    if(recommandCoordiList.length <= MAX_NUM_OF_COORDI) { // 코디가 MAX_NUM_OF_COORDI보다 적으면 읽어온 리스트를 전부 반환
-      LimitedRecommandCoordiList = recommandCoordiList;
+    if(filteredCoordiList.length <= MAX_NUM_OF_COORDI) { // 코디가 MAX_NUM_OF_COORDI보다 적으면 읽어온 리스트를 전부 반환
+      LimitedRecommandCoordiList = filteredCoordiList;
     }
     else {//이 방법은 코디의 수가 적을 땐 오히려 비효율적이다
       while(randomIndexSet.size < MAX_NUM_OF_COORDI) {
-        let idx = Math.floor(Math.random() * (recommandCoordiList.length-1));
+        let idx = Math.floor(Math.random() * (filteredCoordiList.length-1));
         randomIndexSet.add(idx);
       }
       randomIndexSet.forEach(idx=>{
-        LimitedRecommandCoordiList.push(recommandCoordiList[idx]);
+        LimitedRecommandCoordiList.push(filteredCoordiList[idx]);
       })
     }
     
@@ -316,5 +341,88 @@ router.post("/recommand", async (req, res) => {
     res.status(400).send(err.message);
   }
 });
+//현재 동작중인 앱때문에 임시로 get으로 동작하게 만듦
+router.get("/recommand", async (req, res) => {
+  const gender = parseInt(req.query.gender);
+  const stemp = parseInt(req.query.stemp);
+  const isRain = req.query.isRain === 'true';
+  const isSnow = req.query.isSnow === 'true';
+  const windSpeed  = parseInt(req.query.windSpeed);
+  const filterList = JSON.parse(req.query.filterList || '{"outer":[],"top":[],"bottom":[],"one_piece":[]}');
+  const filterSet = {
+    'outer': new Set(filterList['outer']),
+    'top': new Set(filterList['top']),
+    'bottom': new Set(filterList['bottom']),
+    'one_piece': new Set(filterList['one_piece']),
+  }
+  try {
+    const db = admin.firestore();
+    const coordisCollection = db.collection('coordis');
+    const genderCoordiList = await coordisCollection
+    .where('gender',"==",parseInt(gender)).get();
+    if(genderCoordiList.empty) {
+      res.json([]);
+    } 
+    const condition = {
+      stemp : stemp,
+      isRain : isRain,
+      isSnow : isSnow,
+      windSpeed : windSpeed
+    }
 
+    const recommandCoordiList = [];
+    genderCoordiList
+      .forEach(doc=>{
+        const coordi = doc.data();
+        if(recommandValidtor(coordi,condition)) {
+          recommandCoordiList.push(coordi);
+        }
+    });
+    let filteredCoordiList = recommandCoordiList;
+    if(filterSet['outer'].size > 0) {
+      filteredCoordiList = filteredCoordiList.filter(coordi=>{
+        return coordi.items.some(cloth=>cloth.major==='outer' && filterSet['outer'].has(outer2kor[cloth.minor]))
+      })
+    }    
+    if(filterSet['top'].size > 0) {
+      filteredCoordiList = filteredCoordiList.filter(coordi=>{
+        return coordi.items.some(cloth=>cloth.major==='top' && filterSet['top'].has(top2kor[cloth.minor]))
+      })
+    }
+    if(filterSet['bottom'].size > 0) {
+      filteredCoordiList = filteredCoordiList.filter(coordi=>{
+        return coordi.items.some(cloth=>cloth.major==='bottom' && filterSet['bottom'].has(bottom2kor[cloth.minor]))
+      })
+    }
+    if(filterSet['one_piece'].size > 0) {
+      filteredCoordiList = filteredCoordiList.filter(coordi=>{
+        return coordi.items.some(cloth=>cloth.major==='one_piece' && filterSet['one_piece'].has(onePiece2kor[cloth.minor]))
+      })
+    }
+    const randomIndexSet = new Set();
+    let LimitedRecommandCoordiList = [];
+    if(filteredCoordiList.length <= MAX_NUM_OF_COORDI) { // 코디가 MAX_NUM_OF_COORDI보다 적으면 읽어온 리스트를 전부 반환
+      LimitedRecommandCoordiList = filteredCoordiList;
+    }
+    else {//이 방법은 코디의 수가 적을 땐 오히려 비효율적이다
+      while(randomIndexSet.size < MAX_NUM_OF_COORDI) {
+        let idx = Math.floor(Math.random() * (filteredCoordiList.length-1));
+        randomIndexSet.add(idx);
+      }
+      randomIndexSet.forEach(idx=>{
+        LimitedRecommandCoordiList.push(filteredCoordiList[idx]);
+      })
+    }
+    
+    res.json(LimitedRecommandCoordiList.map(coordi=>{
+      return {
+        url: coordi.url || '',
+        items: coordi.items || [],
+        style: coordi.style || ''
+      }
+    }));
+  } catch (err) {
+    res.status(400).send(err.message);
+  }
+});
 module.exports = router;
